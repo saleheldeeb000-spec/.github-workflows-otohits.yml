@@ -1,26 +1,17 @@
-name: Otohits_Ultimate_Machine
+name: Otohits_Fixed
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *' # يعيد تشغيل نفسه كل 6 ساعات تلقائياً
+    - cron: '0 */6 * * *'
 
 jobs:
-  run-otohits:
+  build:
     runs-on: windows-latest
     steps:
-      - name: Setup and Run Otohits
+      - name: Run
         run: |
-          # تحميل برنامج Otohits
-          Invoke-WebRequest -Uri "https://www.otohits.net/dl/otohits-app-win-x64.zip" -OutFile "otohits.zip"
-          
-          # فك الضغط
-          Expand-Archive -Path "otohits.zip" -DestinationPath "."
-          
-          # تشغيل البرنامج باستخدام مفتاحك الخاص
           $appKey = "df74fcd1-4c34-4122-b45d-27884154c62d"
-          Write-Host "Starting Otohits with your Key..."
-          ./OtohitsApp.exe --appkey $appKey --start
-          
-          # إبقاء السيرفر يعمل لأطول فترة ممكنة (5 ساعات ونصف)
-          Write-Host "System is active and collecting points. Do not close this tab."
-          Start-Sleep -Seconds 20000
+          Invoke-WebRequest -Uri "https://www.otohits.net/dl/otohits-app-win-x64.zip" -OutFile "otohits.zip"
+          Expand-Archive -Path "otohits.zip" -DestinationPath "."
+          Start-Process ./OtohitsApp.exe -ArgumentList "--appkey $appKey --start"
+          Start-Sleep -Seconds 21000
