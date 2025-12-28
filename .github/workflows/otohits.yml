@@ -1,17 +1,18 @@
-name: Otohits_Fixed
+name: Otohits_Ultimate_Success
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 */6 * * *'
 
 jobs:
-  build:
-    runs-on: windows-latest
+  otohits_job:
+    runs-on: ubuntu-latest
     steps:
-      - name: Run
+      - name: Run Otohits in Docker
         run: |
-          $appKey = "df74fcd1-4c34-4122-b45d-27884154c62d"
-          Invoke-WebRequest -Uri "https://www.otohits.net/dl/otohits-app-win-x64.zip" -OutFile "otohits.zip"
-          Expand-Archive -Path "otohits.zip" -DestinationPath "."
-          Start-Process ./OtohitsApp.exe -ArgumentList "--appkey $appKey --start"
-          Start-Sleep -Seconds 21000
+          # تشغيل البرنامج داخل حاوية لينكس خفيفة
+          docker run -d --name otohits_container jm90mm/otohits:latest --appkey df74fcd1-4c34-4122-b45d-27884154c62d --start
+          
+          # جعل السيرفر يظن أن هناك نشاط مستمر لكي لا يغلق
+          echo "Otohits is running... collecting points for your key."
+          sleep 21000
